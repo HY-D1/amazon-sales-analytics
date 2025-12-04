@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Data files (you might want to exclude large datasets from git)
+# Uncomment the line below if your dataset is very large
+# data/*.csv
+# But for portfolio projects, you usually want to include sample data
+
+# Docker
+*.log
+
+# Model files (these can be large)
+models/*.pkl
+models/*.h5
+models/*.joblib
+
+# Visualizations (generated, not source)
+visualizations/*.png
+visualizations/*.jpg
+visualizations/*.pdf
+!visualizations/README.md
+
+# PostgreSQL data
+postgres_data/
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
