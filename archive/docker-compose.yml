@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Service
+  # This is where you'll load your Amazon sales data for SQL practice
+  postgres:
+    image: postgres:15-alpine
+    container_name: amazon_postgres_db
+    environment:
+      # Database credentials - in production you'd use secrets, but for local dev this is fine
+      POSTGRES_USER: analyst
+      POSTGRES_PASSWORD: analytics2024
+      POSTGRES_DB: amazon_sales
+    ports:
+      # Map PostgreSQL port so you can connect from outside the container
+      - "5432:5432"
+    volumes:
+      # Persist database data even when container stops
+      - postgres_data:/var/lib/postgresql/data
+      # Mount init scripts (we'll create this) to auto-load data
+      - ./sql_scripts:/docker-entrypoint-initdb.d
+    networks:
+      - analytics_network
+
+  # Python Analytics Service
+  # This runs your Jupyter Lab environment with all data science tools
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: amazon_jupyter_lab
+    ports:
+      # Map Jupyter Lab port to access from your browser
+      - "8888:8888"
+    volumes:
+      # Mount your project directory so changes persist
+      # Any file you create/edit in Jupyter will be saved on your Mac
+      - .:/home/jovyan/work
+    environment:
+      # Database connection string for easy access from Python
+      DATABASE_URL: postgresql://analyst:analytics2024@postgres:5432/amazon_sales
+    depends_on:
+      # Wait for PostgreSQL to be ready before starting Jupyter
+      - postgres
+    networks:
+      - analytics_network
+
+# Define named volumes for data persistence
+volumes:
+  postgres_data:
+    driver: local
+
+# Create a custom network so services can communicate
+networks:
+  analytics_network:
+    driver: bridge
