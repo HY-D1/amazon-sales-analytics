@@ -12,11 +12,12 @@ echo "=========================="
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Check if Python is installed
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Python 3 is required but not installed."
+    echo -e "${RED}❌ Python 3 is required but not installed.${NC}"
     exit 1
 fi
 
@@ -39,18 +40,67 @@ if [ ! -f ".venv/installed" ] || [ "requirements.txt" -nt ".venv/installed" ]; t
     echo -e "${GREEN}✅ Dependencies installed!${NC}"
 fi
 
+# Check if data exists
+if [ ! -f "data/Amazon.csv" ]; then
+    echo -e "${RED}❌ Error: data/Amazon.csv not found!${NC}"
+    exit 1
+fi
+
 # Parse argument
 MODE=${1:-menu}
 
-if [ "$MODE" == "notebook" ] || [ "$MODE" == "n" ]; then
+run_notebook() {
     echo -e "${GREEN}🚀 Starting Jupyter Lab...${NC}"
     echo -e "${YELLOW}   URL: http://localhost:8888${NC}"
-    jupyter lab notebooks/amazon_sales_analysis.ipynb --no-browser
+    echo -e "${YELLOW}   Press Ctrl+C to stop${NC}"
+    echo ""
+    jupyter lab notebooks/amazon_sales_analysis.ipynb --no-browser || {
+        echo -e "${RED}❌ Failed to start Jupyter. Try: pip install jupyterlab${NC}"
+        exit 1
+    }
+}
+
+run_dashboard() {
+    echo -e "${GREEN}🚀 Starting Streamlit Dashboard...${NC}"
+    
+    # Find available port (cross-platform)
+    PORT=8501
+    MAX_PORT=8510
+    while [ $PORT -le $MAX_PORT ]; do
+        # Check if port is in use (cross-platform method)
+        if ! (echo "" > /dev/tcp/localhost/$PORT) 2>/dev/null; then
+            break
+        fi
+        echo -e "${YELLOW}⚠️  Port $PORT is busy, trying $((PORT+1))...${NC}"
+        PORT=$((PORT+1))
+    done
+    
+    if [ $PORT -gt $MAX_PORT ]; then
+        echo -e "${RED}❌ Could not find available port between 8501-8510${NC}"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}   URL: http://localhost:$PORT${NC}"
+    echo -e "${YELLOW}   Press Ctrl+C to stop${NC}"
+    echo ""
+    
+    # Run Streamlit with error handling
+    if ! streamlit run dashboard.py --server.port=$PORT --server.headless=true 2>&1; then
+        echo ""
+        echo -e "${RED}❌ Streamlit failed to start${NC}"
+        echo -e "${YELLOW}   Common fixes:${NC}"
+        echo -e "   1. Install: pip install streamlit plotly${NC}"
+        echo -e "   2. Check Python: python3 --version${NC}"
+        echo -e "   3. Run check: python3 check.py${NC}"
+        exit 1
+    fi
+}
+
+if [ "$MODE" == "notebook" ] || [ "$MODE" == "n" ]; then
+    run_notebook
     
 elif [ "$MODE" == "dashboard" ] || [ "$MODE" == "d" ]; then
-    echo -e "${GREEN}🚀 Starting Streamlit Dashboard...${NC}"
-    echo -e "${YELLOW}   URL: http://localhost:8501${NC}"
-    streamlit run dashboard.py
+    run_dashboard
     
 else
     # Interactive menu
@@ -65,14 +115,10 @@ else
     
     case $choice in
         1)
-            echo -e "${GREEN}🚀 Starting Jupyter Lab...${NC}"
-            echo -e "${YELLOW}   URL: http://localhost:8888${NC}"
-            jupyter lab notebooks/amazon_sales_analysis.ipynb --no-browser
+            run_notebook
             ;;
         2)
-            echo -e "${GREEN}🚀 Starting Streamlit Dashboard...${NC}"
-            echo -e "${YELLOW}   URL: http://localhost:8501${NC}"
-            streamlit run dashboard.py
+            run_dashboard
             ;;
         3)
             echo -e "${BLUE}🔄 Reinstalling dependencies...${NC}"

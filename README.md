@@ -112,6 +112,40 @@ jupyter lab notebooks/amazon_sales_analysis.ipynb
 streamlit run dashboard.py
 ```
 
+## 🔧 Troubleshooting
+
+### Dashboard won't start / "Connection refused"
+
+**Check:**
+```bash
+python3 check.py          # Diagnose issues
+```
+
+**Common fixes:**
+1. **Missing packages:**
+   ```bash
+   pip install streamlit plotly seaborn
+   ```
+
+2. **Port 8501 busy:** The start.sh will auto-find another port (8502, 8503...)
+
+3. **Virtual environment issues:**
+   ```bash
+   rm -rf .venv              # Remove old venv
+   ./start.sh                # Recreate
+   ```
+
+### Windows Users
+Use `start.bat` instead of `./start.sh`:
+```cmd
+start.bat
+```
+
+### Check Python version
+```bash
+python3 --version    # Needs 3.9+
+```
+
 ---
 
 ## 💻 Code Example
