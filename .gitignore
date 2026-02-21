@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+.venv/
 env/
 venv/
 ENV/
@@ -44,9 +45,6 @@ wheels/
 # data/*.csv
 # But for portfolio projects, you usually want to include sample data
 
-# Docker
-*.log
-
 # Model files (these can be large)
 models/*.pkl
 models/*.h5
@@ -57,9 +55,6 @@ visualizations/*.png
 visualizations/*.jpg
 visualizations/*.pdf
 !visualizations/README.md
-
-# PostgreSQL data
-postgres_data/
 
 # Mac
 .DS_Store

@@ -1,57 +1,89 @@
 """
 Simple Data Loader for Amazon Sales Dataset
+Uses SQLite instead of PostgreSQL for zero-setup portability
 """
 
 import pandas as pd
-from sqlalchemy import create_engine, text
-import os
+import sqlite3
+from pathlib import Path
 
-def load_data():
-    DATABASE_URL = os.getenv(
-        'DATABASE_URL',
-        'postgresql://analyst:analytics2024@postgres:5432/amazon_sales'
-    )
+def load_data(csv_path='data/Amazon.csv', db_path='data/amazon_sales.db'):
+    """
+    Load CSV data into SQLite database for SQL analysis
+    Returns both DataFrame and database connection
+    """
+    # Ensure data directory exists
+    Path(db_path).parent.mkdir(exist_ok=True)
     
-    CSV_PATH = '/app/data/Amazon.csv'
+    print("📊 Loading Amazon Sales Data...")
     
-    try:
-        print("Reading CSV...")
-        df = pd.read_csv(CSV_PATH)
+    # Read CSV
+    df = pd.read_csv(csv_path)
+    df.columns = df.columns.str.lower()
+    print(f"✓ Loaded {len(df):,} rows with {len(df.columns)} columns")
+    
+    # Create SQLite database
+    conn = sqlite3.connect(db_path)
+    
+    # Load data into SQL
+    df.to_sql('sales', conn, if_exists='replace', index=False)
+    
+    # Create useful views
+    conn.executescript('''
+        DROP VIEW IF EXISTS revenue_by_category;
+        DROP VIEW IF EXISTS monthly_sales;
+        DROP VIEW IF EXISTS customer_summary;
         
-        # Convert column names to lowercase
-        df.columns = df.columns.str.lower()
+        CREATE VIEW revenue_by_category AS
+        SELECT 
+            category,
+            COUNT(*) as orders,
+            SUM(quantity) as items_sold,
+            ROUND(SUM(totalamount), 2) as revenue,
+            ROUND(AVG(totalamount), 2) as avg_order_value
+        FROM sales
+        GROUP BY category
+        ORDER BY revenue DESC;
         
-        print(f"Loaded {len(df):,} rows")
+        CREATE VIEW monthly_sales AS
+        SELECT 
+            SUBSTR(orderdate, 1, 7) as month,
+            COUNT(*) as orders,
+            ROUND(SUM(totalamount), 2) as revenue,
+            ROUND(AVG(totalamount), 2) as avg_order
+        FROM sales
+        GROUP BY month
+        ORDER BY month;
         
-        # Connect and drop dependent views first
-        engine = create_engine(DATABASE_URL)
-        with engine.connect() as conn:
-            conn.execute(text("DROP VIEW IF EXISTS revenue_summary CASCADE"))
-            conn.execute(text("DROP VIEW IF EXISTS customer_insights CASCADE"))
-            conn.execute(text("DROP VIEW IF EXISTS product_performance CASCADE"))
-            conn.commit()
-        
-        # Load data
-        print("Loading into PostgreSQL...")
-        df.to_sql(
-            name='sales_transactions',
-            con=engine,
-            if_exists='replace',
-            index=False,
-            chunksize=5000
-        )
-        
-        # Verify
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT COUNT(*) FROM sales_transactions"))
-            count = result.fetchone()[0]
-        
-        print(f"✓ Success! Loaded {count:,} rows into database")
-        return True
-        
-    except Exception as e:
-        print(f"✗ Error: {e}")
-        return False
+        CREATE VIEW customer_summary AS
+        SELECT 
+            customerid,
+            customername,
+            COUNT(*) as orders,
+            ROUND(SUM(totalamount), 2) as lifetime_value,
+            ROUND(AVG(totalamount), 2) as avg_order,
+            MIN(orderdate) as first_order,
+            MAX(orderdate) as last_order
+        FROM sales
+        GROUP BY customerid, customername
+        ORDER BY lifetime_value DESC;
+    ''')
+    
+    conn.commit()
+    print(f"✓ SQLite database created: {db_path}")
+    print(f"✓ SQL views created: revenue_by_category, monthly_sales, customer_summary")
+    
+    return df, conn
+
+def query(sql, conn):
+    """Execute SQL query and return DataFrame"""
+    return pd.read_sql_query(sql, conn)
 
 if __name__ == "__main__":
-    load_data()
+    df, conn = load_data()
+    print("\n📈 Sample Queries:")
+    print("\n1. Revenue by Category:")
+    print(query("SELECT * FROM revenue_by_category", conn))
+    print("\n2. Top 5 Customers:")
+    print(query("SELECT * FROM customer_summary LIMIT 5", conn))
+    conn.close()

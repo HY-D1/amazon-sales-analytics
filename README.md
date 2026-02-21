@@ -1,81 +1,172 @@
-# Amazon Sales Analytics Project
+# 📊 Amazon Sales Analytics
 
-A comprehensive data analytics portfolio project demonstrating end-to-end analysis of Amazon sales data, featuring descriptive statistics, predictive modeling, SQL querying, and interactive visualizations.
+A comprehensive data analysis of **100,000 Amazon transactions** uncovering revenue patterns, customer behavior, and business opportunities.
 
-## Project Overview
+[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://python.org)
+[![Pandas](https://img.shields.io/badge/Pandas-2.1.4-green)](https://pandas.pydata.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.29-FF4B4B)](https://streamlit.io)
 
-This project analyzes 100,000 Amazon sales transactions to uncover business insights and build predictive models. The analysis demonstrates proficiency in Python data science libraries, SQL, statistical analysis, and machine learning fundamentals.
+---
 
-## Dataset Description
+## 🎯 Key Findings
 
-The Amazon sales dataset contains 20 features across 100,000 transactions including order details, customer information, product data, pricing, and geographic information. Key features include OrderDate, ProductName, Category, Brand, UnitPrice, Discount, TotalAmount, PaymentMethod, and OrderStatus.
+| Metric | Value | Insight |
+|--------|-------|---------|
+| 💰 **Total Revenue** | $91.8M | Strong revenue base across 4 years |
+| 📦 **Total Orders** | 100,000 | 3 items avg per order |
+| 💵 **Avg Order Value** | $918 | Median $714 (right-skewed distribution) |
+| 👥 **Unique Customers** | 43,233 | 2.3 orders per customer avg |
+| ✅ **Delivery Rate** | 74.6% | 25% orders need attention |
 
-## Technical Stack
+### 📈 Strategic Insights
 
-**Data Analysis:** Python (Pandas, NumPy), SQL (PostgreSQL)  
-**Visualization:** Matplotlib, Seaborn, Plotly  
-**Machine Learning:** Scikit-learn  
-**Statistical Analysis:** SciPy, Statsmodels  
-**Development Environment:** Docker, Jupyter Lab  
-**Version Control:** Git
+1. **🎯 Revenue Concentration**: Top 20% of customers generate **44% of total revenue**
+   - *Recommendation*: Implement VIP customer retention program
 
-## Getting Started
+2. **⚠️ Order Fulfillment Gap**: 25% orders cancelled/returned/pending
+   - *Potential Recovery*: ~$23M if 50% issues resolved
 
-### Prerequisites
+3. **📦 Category Leaders**: Electronics & Sports dominate (~17K orders each)
+   - *Recommendation*: Prioritize inventory for top categories
 
-Docker Desktop installed
+4. **💳 Payment Trends**: Credit cards 35%, Cash on Delivery only 5%
+   - *Trend*: Strong digital payment adoption
 
-### Setup Instructions
+5. **🗺️ Geographic Concentration**: 70% sales from US (Texas & California lead)
+   - *Opportunity*: Expand in underperforming states
 
+---
 
-```bash
-# Build containers
-docker-compose build
-
-# Start environment
-docker-compose up
-
-# Access Jupyter Lab at: http://localhost:8888
-# Token: amazon_analytics_2024
-```
-
-### Database Connection
+## 🚀 Quick Start (One Command)
 
 ```bash
-postgresql://analyst:analytics2024@postgres:5432/amazon_sales
+./start.sh
 ```
 
-### Stopping and Restarting
+That's it! The script will:
+- ✅ Create virtual environment (if needed)
+- ✅ Install dependencies (if needed)
+- ✅ Show interactive menu to choose:
+  - 📓 **Jupyter Notebook** - Complete analysis with code
+  - 📊 **Streamlit Dashboard** - Interactive web dashboard
+
+### Alternative Commands
 ```bash
-# Ctrl+C, then:
-docker-compose down
+./start.sh notebook     # Jump straight to notebook
+./start.sh dashboard    # Jump straight to dashboard
 ```
 
-## Project Structure
+---
+
+## 📊 What You'll See
+
+### Option 1: Jupyter Notebook
+Complete analysis with 5 sections:
+1. Data Overview & SQL Queries
+2. Visual Analysis (Categories, Status, Payments)
+3. Customer Insights & Pareto Analysis
+4. Statistical Summary
+5. Business Recommendations
+
+### Option 2: Streamlit Dashboard
+Interactive web interface with:
+- **5 KPI Cards** (Revenue, Orders, AOV, Customers, Delivery Rate)
+- **Interactive Charts** (filter, zoom, hover)
+- **Geographic Analysis** (maps and breakdowns)
+- **Data Explorer** (filter & export CSV)
+
+---
+
+## 📁 Project Structure
 
 ```
 amazon-sales-analytics/
-├── Dockerfile                  # Python environment configuration
-├── docker-compose.yml          # Multi-container orchestration
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── .gitignore                  # Files to exclude from git
-├── data/
-│   └── Amazon.csv             # Raw dataset
-├── sql_scripts/
-│   └── init_db.sql            # Database initialization
-├── notebooks/
-│   ├── 01_exploratory_analysis.ipynb
-│   ├── 02_descriptive_statistics.ipynb
-│   └── 03_predictive_modeling.ipynb
-├── src/
-│   ├── data_loader.py         # Data loading utilities
-│   ├── preprocessing.py       # Data cleaning functions
-│   └── models.py              # ML model implementations
-└── visualizations/
-    └── (Generated charts and dashboards)
+├── 🚀 start.sh                  # ← RUN THIS
+├── 📊 dashboard.py              # Interactive Streamlit dashboard
+├── 📓 notebooks/
+│   └── amazon_sales_analysis.ipynb  # Complete analysis
+├── 📁 data/
+│   └── Amazon.csv              # 100K transactions
+├── 🔧 src/
+│   └── data_loader.py          # SQLite utilities
+├── 📋 requirements.txt          # Python dependencies
+└── 📖 README.md
 ```
 
-## Analysis Components
+---
 
-The project includes comprehensive exploratory data analysis examining sales patterns. I perform descriptive statistical analysis calculating key metrics like average order value, discount patterns, revenue by category, and seasonal trends. The predictive modeling component builds machine learning models to forecast sales volumes, predict order values, and classify high-value customers. Finally, SQL querying demonstrates database operations including complex joins, aggregations, window functions, and subqueries to extract business insights.
+## 🛠️ Manual Setup (if you prefer)
+
+```bash
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run notebook
+jupyter lab notebooks/amazon_sales_analysis.ipynb
+
+# Or run dashboard
+streamlit run dashboard.py
+```
+
+---
+
+## 💻 Code Example
+
+```python
+import pandas as pd
+from src.data_loader import load_data
+
+# Load data (auto-creates SQLite DB)
+df, conn = load_data()
+
+# Query with SQL
+revenue = pd.read_sql("""
+    SELECT category, SUM(totalamount) as revenue
+    FROM sales
+    GROUP BY category
+    ORDER BY revenue DESC
+""", conn)
+
+print(revenue)
+```
+
+---
+
+## 📦 Tech Stack
+
+| Category | Tools |
+|----------|-------|
+| **Data Processing** | Pandas, NumPy |
+| **Database** | SQLite |
+| **Visualization** | Matplotlib, Seaborn, Plotly |
+| **Dashboard** | Streamlit |
+| **Statistics** | SciPy |
+
+---
+
+## 📝 Dataset
+
+- **Size**: 100,000 transactions
+- **Date Range**: 2020-2024
+- **Features**: 20 columns (orders, customers, products, payments, geography)
+- **Categories**: Electronics, Sports, Books, Clothing, Home & Kitchen, Toys
+
+---
+
+## 🤝 Contributing
+
+Feel free to extend with:
+- Time series forecasting
+- Customer segmentation models
+- A/B test analysis
+- Additional visualizations
+
+---
+
+**Created with**: Python · Pandas · SQLite · Plotly · Streamlit
+
+*Last updated: 2024*
