@@ -1,206 +1,151 @@
-# 📊 Amazon Sales Analytics
+# Amazon Sales Analytics
 
-A comprehensive data analysis of **100,000 Amazon transactions** uncovering revenue patterns, customer behavior, and business opportunities.
+A data analysis toolkit that uncovers revenue patterns and customer behavior from 100K Amazon transactions for data analysts and business stakeholders using Python, SQLite, and Streamlit.
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://python.org)
-[![Pandas](https://img.shields.io/badge/Pandas-2.1.4-green)](https://pandas.pydata.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.29-FF4B4B)](https://streamlit.io)
-
----
-
-## 🎯 Key Findings
-
-| Metric | Value | Insight |
-|--------|-------|---------|
-| 💰 **Total Revenue** | $91.8M | Strong revenue base across 4 years |
-| 📦 **Total Orders** | 100,000 | 3 items avg per order |
-| 💵 **Avg Order Value** | $918 | Median $714 (right-skewed distribution) |
-| 👥 **Unique Customers** | 43,233 | 2.3 orders per customer avg |
-| ✅ **Delivery Rate** | 74.6% | 25% orders need attention |
-
-### 📈 Strategic Insights
-
-1. **🎯 Revenue Concentration**: Top 20% of customers generate **44% of total revenue**
-   - *Recommendation*: Implement VIP customer retention program
-
-2. **⚠️ Order Fulfillment Gap**: 25% orders cancelled/returned/pending
-   - *Potential Recovery*: ~$23M if 50% issues resolved
-
-3. **📦 Category Leaders**: Electronics & Sports dominate (~17K orders each)
-   - *Recommendation*: Prioritize inventory for top categories
-
-4. **💳 Payment Trends**: Credit cards 35%, Cash on Delivery only 5%
-   - *Trend*: Strong digital payment adoption
-
-5. **🗺️ Geographic Concentration**: 70% sales from US (Texas & California lead)
-   - *Opportunity*: Expand in underperforming states
-
----
-
-## 🚀 Quick Start (One Command)
+## Demo
 
 ```bash
+# Start the interactive menu
+$ ./start.sh
+
+📊 Amazon Sales Analytics
+═══════════════════════════════════════
+
+Choose an option:
+  1) 📓 Open Jupyter Notebook
+  2) 📊 Open Streamlit Dashboard
+
+Enter your choice [1-2]:
+```
+
+## Features
+
+### Implemented (v1.0)
+
+- **Jupyter Notebook Analysis**: 5-section analysis with SQL queries, visualizations, and statistical insights
+- **Interactive Streamlit Dashboard**: KPI cards, filterable charts, and data explorer
+- **SQLite Data Layer**: Zero-setup database with pre-defined SQL views
+- **Health Check Script**: Environment validation and diagnostics
+- **Auto Environment Setup**: Virtual environment and dependency management via `start.sh`
+
+### Planned (v2.0)
+
+- Time series forecasting (Prophet/ARIMA)
+- Customer segmentation (RFM analysis)
+- A/B test analysis framework
+- PDF/Excel report export
+- Streamlit Cloud deployment support
+
+## Architecture
+
+Data flows from CSV → SQLite via `data_loader.py`, queried by either the Jupyter notebook (analysis) or Streamlit dashboard (interactive exploration). The notebook provides deep-dive SQL analysis and statistical modeling, while the dashboard offers real-time filtering and KPI tracking.
+
+```mermaid
+graph LR
+    A[Amazon.csv] -->|load_data()| B[(SQLite DB)]
+    B -->|SQL Queries| C[Jupyter Notebook]
+    B -->|Pandas/Plotly| D[Streamlit Dashboard]
+    C -->|Visualizations| E[Charts & Insights]
+    D -->|Interactive| F[KPIs & Filters]
+```
+
+## Setup
+
+### Prerequisites
+
+- Python 3.9+
+- 500MB disk space (includes virtual environment)
+
+### Quick Start
+
+```bash
+# Interactive menu (recommended)
 ./start.sh
+
+# Direct commands
+./start.sh notebook     # Launch Jupyter Lab
+./start.sh dashboard    # Launch Streamlit (port 8501-8510)
 ```
 
-That's it! The script will:
-- ✅ Create virtual environment (if needed)
-- ✅ Install dependencies (if needed)
-- ✅ Show interactive menu to choose:
-  - 📓 **Jupyter Notebook** - Complete analysis with code
-  - 📊 **Streamlit Dashboard** - Interactive web dashboard
-
-### Alternative Commands
-```bash
-./start.sh notebook     # Jump straight to notebook
-./start.sh dashboard    # Jump straight to dashboard
-```
-
----
-
-## 📊 What You'll See
-
-### Option 1: Jupyter Notebook
-Complete analysis with 5 sections:
-1. Data Overview & SQL Queries
-2. Visual Analysis (Categories, Status, Payments)
-3. Customer Insights & Pareto Analysis
-4. Statistical Summary
-5. Business Recommendations
-
-### Option 2: Streamlit Dashboard
-Interactive web interface with:
-- **5 KPI Cards** (Revenue, Orders, AOV, Customers, Delivery Rate)
-- **Interactive Charts** (filter, zoom, hover)
-- **Geographic Analysis** (maps and breakdowns)
-- **Data Explorer** (filter & export CSV)
-
----
-
-## 📁 Project Structure
-
-```
-amazon-sales-analytics/
-├── 🚀 start.sh                  # ← RUN THIS
-├── 📊 dashboard.py              # Interactive Streamlit dashboard
-├── 📓 notebooks/
-│   └── amazon_sales_analysis.ipynb  # Complete analysis
-├── 📁 data/
-│   └── Amazon.csv              # 100K transactions
-├── 🔧 src/
-│   └── data_loader.py          # SQLite utilities
-├── 📋 requirements.txt          # Python dependencies
-└── 📖 README.md
-```
-
----
-
-## 🛠️ Manual Setup (if you prefer)
+### Run Tests
 
 ```bash
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run notebook
-jupyter lab notebooks/amazon_sales_analysis.ipynb
-
-# Or run dashboard
-streamlit run dashboard.py
+# Environment and dependency validation
+python3 check.py
 ```
 
-## 🔧 Troubleshooting
+### Configuration
 
-### Dashboard won't start / "Connection refused"
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATA_PATH` | `data/Amazon.csv` | Path to transaction CSV |
+| `DB_PATH` | `data/amazon.db` | SQLite database location |
+| `DASHBOARD_PORT` | `8501` | Streamlit server port |
 
-**Check:**
-```bash
-python3 check.py          # Diagnose issues
-```
+No configuration file required; modify `src/data_loader.py` or `dashboard.py` directly for custom paths.
 
-**Common fixes:**
-1. **Missing packages:**
-   ```bash
-   pip install streamlit plotly seaborn
-   ```
+## API Reference
 
-2. **Port 8501 busy:** The start.sh will auto-find another port (8502, 8503...)
+N/A
 
-3. **Virtual environment issues:**
-   ```bash
-   rm -rf .venv              # Remove old venv
-   ./start.sh                # Recreate
-   ```
+## Data Model / Schema
 
-### Windows Users
-Use `start.bat` instead of `./start.sh`:
-```cmd
-start.bat
-```
+**Table: `sales`** (100,000 rows)
 
-### Check Python version
-```bash
-python3 --version    # Needs 3.9+
-```
+| Column | Type | Description |
+|--------|------|-------------|
+| `orderid` | TEXT | Unique order identifier (ORD0000001) |
+| `orderdate` | DATETIME | Order timestamp (2020-2024) |
+| `customerid` | TEXT | Customer identifier (CUST######) |
+| `customername` | TEXT | Full customer name |
+| `productid` | TEXT | Product SKU (P#####) |
+| `productname` | TEXT | Product description |
+| `category` | TEXT | Electronics, Sports, Books, Clothing, Home & Kitchen, Toys |
+| `brand` | TEXT | Product brand |
+| `quantity` | INTEGER | Items ordered |
+| `unitprice` | REAL | Price per unit ($) |
+| `discount` | REAL | Discount rate (0.0-0.15) |
+| `tax` | REAL | Tax amount ($) |
+| `shippingcost` | REAL | Shipping cost ($) |
+| `totalamount` | REAL | Final order total ($) |
+| `paymentmethod` | TEXT | Credit Card, Debit Card, Amazon Pay, Gift Card, COD |
+| `orderstatus` | TEXT | Delivered, Shipped, Pending, Returned, Cancelled |
+| `city` | TEXT | Customer city |
+| `state` | TEXT | Customer state |
+| `country` | TEXT | Country (US, India, etc.) |
+| `sellerid` | TEXT | Seller identifier |
 
----
+**SQL Views:**
+- `revenue_by_category` - Aggregated revenue per category
+- `monthly_sales` - Time-series revenue data
+- `customer_summary` - Per-customer metrics (orders, revenue, LTV)
 
-## 💻 Code Example
+## Trade-offs & Design Decisions
 
-```python
-import pandas as pd
-from src.data_loader import load_data
+- **Chose:** SQLite over PostgreSQL
+  - **Gave up:** Concurrent write support, enterprise scalability
+  - **Why:** Zero-setup portability; users can run immediately without Docker or database configuration
 
-# Load data (auto-creates SQLite DB)
-df, conn = load_data()
+- **Chose:** Manual/integration testing via `check.py` over unit tests
+  - **Gave up:** Automated regression coverage, CI/CD integration
+  - **Why:** Project is analysis-focused with visual outputs; health checks verify environment and data integrity more effectively than unit tests for notebooks
 
-# Query with SQL
-revenue = pd.read_sql("""
-    SELECT category, SUM(totalamount) as revenue
-    FROM sales
-    GROUP BY category
-    ORDER BY revenue DESC
-""", conn)
+- **Chose:** Single-file Streamlit dashboard over modular components
+  - **Gave up:** Code reusability, testability
+  - **Why:** Simpler deployment to Streamlit Cloud; single entry point reduces complexity for data analysts who may not be software engineers
 
-print(revenue)
-```
+## Limitations
 
----
+- Dataset contains synthetic/mock data (no real PII)
+- SQLite is single-writer; concurrent dashboard sessions may experience locks
+- No authentication on dashboard (local-only deployment)
+- Windows support requires `start.bat` (maintained separately from `start.sh`)
+- No automated tests for notebook cells; visual inspection required
 
-## 📦 Tech Stack
+## Next Steps
 
-| Category | Tools |
-|----------|-------|
-| **Data Processing** | Pandas, NumPy |
-| **Database** | SQLite |
-| **Visualization** | Matplotlib, Seaborn, Plotly |
-| **Dashboard** | Streamlit |
-| **Statistics** | SciPy |
-
----
-
-## 📝 Dataset
-
-- **Size**: 100,000 transactions
-- **Date Range**: 2020-2024
-- **Features**: 20 columns (orders, customers, products, payments, geography)
-- **Categories**: Electronics, Sports, Books, Clothing, Home & Kitchen, Toys
-
----
-
-## 🤝 Contributing
-
-Feel free to extend with:
-- Time series forecasting
-- Customer segmentation models
-- A/B test analysis
-- Additional visualizations
-
----
-
-**Created with**: Python · Pandas · SQLite · Plotly · Streamlit
-
-*Last updated: 2024*
+1. Implement time series forecasting for revenue prediction
+2. Add customer segmentation using RFM (Recency, Frequency, Monetary) analysis
+3. Create PDF report generator from notebook outputs
+4. Deploy dashboard to Streamlit Cloud with public data source
+5. Add unit tests for `data_loader.py` functions
