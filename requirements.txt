@@ -15,3 +15,6 @@ streamlit==1.29.0
 
 # Notebook support
 jupyterlab==4.0.9
+
+# Explicit compatibility: newer PyArrow may require NumPy 2
+pyarrow==17.0.0

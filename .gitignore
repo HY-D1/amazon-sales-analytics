@@ -60,3 +60,12 @@ visualizations/*.pdf
 .DS_Store
 .AppleDouble
 .LSOverride
+# Reproducible local build outputs
+*.db
+*.db-shm
+*.db-wal
+data/demo_sales.csv
+bi/exports/
+.pytest_cache/
+.coverage
+data/demo_sales.csv.metadata.json
