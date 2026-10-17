@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "schema_version": "2",
+    "source_sha256": "deee0411148e466553a3b5e5412a12b0b93b2e2f66863baccfa9a57aed6cf4ef",
+    "data_kind": "independently generated synthetic demo",
+    "currency": "USD (demo assumption)",
+    "grain": "one order, one product per row",
+    "date_min": "2024-01-01",
+    "date_max": "2025-12-31",
+    "input_rows": 2400,
+    "exact_duplicates_removed": 0,
+    "valid_orders": 2400,
+    "rejected_rows": 0
+  },
+  "kpis": {
+    "total_orders": 2400,
+    "delivered_orders": 1701,
+    "returned_orders": 228,
+    "unique_customers": 180,
+    "delivered_revenue_cents": 12240660,
+    "booked_total_cents": 18827290,
+    "delivered_aov_cents": 7196.155202821869,
+    "returned_share": 0.095,
+    "completed_return_rate": 0.1181959564541213,
+    "delivered_share": 0.70875
+  }
+}

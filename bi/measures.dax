@@ -1,0 +1,11 @@
+// Create each measure separately in Power BI Desktop after the documented import.
+// Draft DAX: not executed in a Power BI engine on this macOS host.
+Orders = COALESCE(DISTINCTCOUNT(FactOrders[orderid]), 0)
+Delivered Orders = COALESCE(CALCULATE(DISTINCTCOUNT(FactOrders[orderid]), FactOrders[orderstatus] = "Delivered"), 0)
+Returned Orders = COALESCE(CALCULATE(DISTINCTCOUNT(FactOrders[orderid]), FactOrders[orderstatus] = "Returned"), 0)
+Delivered Merchandise Revenue = DIVIDE(COALESCE(SUM(FactOrders[delivered_revenue_cents]), 0), 100)
+Booked Order Value = DIVIDE(COALESCE(SUM(FactOrders[totalamount_cents]), 0), 100)
+Delivered Merchandise AOV = DIVIDE([Delivered Merchandise Revenue], [Delivered Orders])
+Returned Share = DIVIDE([Returned Orders], [Orders])
+Completed Outcome Return Share = DIVIDE([Returned Orders], [Returned Orders] + [Delivered Orders])
+Customers = COALESCE(DISTINCTCOUNT(FactOrders[customerid]), 0)
