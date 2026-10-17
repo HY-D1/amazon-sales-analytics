@@ -6,6 +6,8 @@
 
 ![Actual locally running Streamlit dashboard](docs/screenshots/dashboard-overview.png)
 
+![Actual SQL-backed charts and computed observations](docs/screenshots/dashboard-analysis.png)
+
 ## Start here
 
 Verified locally on macOS with Python 3.11; GitHub CI uses Ubuntu/Python 3.11.

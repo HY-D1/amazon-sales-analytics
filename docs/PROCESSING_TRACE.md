@@ -57,3 +57,7 @@ All relative data paths resolve from repository root. Explicit CLI `--csv`/`--db
 - `docs/VERIFICATION.md`: commands actually run, observed outcomes and limitations. `docs/CHANGELOG.md`: root causes, changed contracts/files, revisions and remaining work.
 
 The generated manifest ties each BI CSV to its SHA-256 and expected SQL KPIs. The database metadata ties canonical rows to the input hash. Regenerating a file changes no checked-in business claim automatically: review the new report/metrics diff and update screenshots when deliberately changing the demo seed or generator.
+
+## Screenshot capture trace
+
+Actual local browser captures were saved for the desktop overview, analytical charts, order explorer and 661px narrow view. The capture API returned JPEG bytes despite `.png` filenames. `scripts/normalize_screenshots.sh` re-encodes those bytes as genuine PNG using macOS `sips`; it does not crop, resize, recolor or alter the chart contents. The website copy uses these exact normalized screenshot bytes, with tested intrinsic dimensions.

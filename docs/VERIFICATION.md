@@ -51,3 +51,20 @@ The SQL + Python + Streamlit + BI-ready data-model demonstration meets its local
 Power BI Desktop, Power Query import, draft DAX and visual cross-filtering are **Unverified** on Windows; no PBIX exists. The Windows launcher is also unverified. No live public Streamlit deployment is claimed. Source/license/currency of the legacy CSV remain unverified and are excluded from V2 results.
 
 GitHub CI and pull-request URLs are recorded in delivery notes after remote checks complete. A CI configuration by itself is not a successful CI result.
+
+## Remote clean-environment CI evidence
+
+Implementation head: `2a29a94db5a1edd6755852eeaf79979685e62a0d`.
+
+- [PR workflow run 39004482247](https://github.com/HY-D1/amazon-sales-analytics/actions/runs/39004482247): **SUCCESS**, completed 2026-10-16 21:58 PDT. Ubuntu/Python 3.11 installed from requirements, generated data, built SQLite/exports, checked dependencies/source hash, ran **37 passed, 12 warnings in 4.98s**, executed the notebook, and uploaded `validated-analysis` (artifact ID 12090436250).
+- [Branch workflow run 39004461605](https://github.com/HY-D1/amazon-sales-analytics/actions/runs/39004461605): **SUCCESS** for the same implementation commit.
+- Both runs were inspected with `gh run view`; the PR log confirmed five exported tables, fact/SQL reconciliation, 37 passing tests and the executed notebook artifact.
+- Project PR: https://github.com/HY-D1/amazon-sales-analytics/pull/1. Open and mergeable; not merged. `origin/main` remains baseline `78d173fff0f87a4f891fc88d258e6ca523d62b85`.
+
+The committed processing code and the complete local/remote checks satisfy the gate for a factual personal-website project entry. A website branch/PR does not itself constitute a live Pages deployment.
+
+## Identity and screenshot corrections
+
+The owner requested removal of the incorrect inherited Git author. Implementation commit `2a29a94` was replaced by `7b96a39` with the identical tree; GitHub confirms author and committer now associate with HY-D1. See `docs/GIT_IDENTITY_AUDIT.md`.
+
+Screenshot-format verification found the capture API had returned JPEG bytes under `.png` filenames. Actual captures were re-encoded without visual edits using the retained `scripts/normalize_screenshots.sh` helper. File signatures now match PNG; final overview and analysis captures are 1280×720, explorer capture 1602×798, and narrow capture 661×865. Website tests verify the actual screenshot format and dimensions.

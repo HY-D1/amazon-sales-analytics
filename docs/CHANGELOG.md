@@ -36,3 +36,7 @@ Date: 2026-10-16. Branch: `portfolio-v2`. Original `main` remains untouched.
 ## Commit suggestion
 
 `feat: deliver auditable retail analytics portfolio v2` — keep the coherent metric/data contract and its tests together. Follow with delivery-only documentation when remote CI/PR results are available. Website presentation belongs in its separate repository/branch/PR after this gate passes.
+
+## Commit identity correction
+
+The first V2 commit inherited an incorrect global Git author. After the owner's explicit direction, global and both repository-local identities were corrected to Hanyu Dai / the verified HY-D1 privacy email. The single V2 implementation commit was reauthored with an expected-head lease and identical file tree. See `docs/GIT_IDENTITY_AUDIT.md` for evidence, recovery point and remote account verification.

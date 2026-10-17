@@ -54,6 +54,6 @@ Deliver an honest, reproducible SQL + Python + BI-ready retail analytics portfol
 - Notebook embeds fixed $91.8M revenue and recovery claims without status-aware revenue policy.
 
 ## Status
-TASK-1 ✅; TASK-2 ✅ (R1: immutable snapshot); TASK-3 ✅ (R1: narrow layout); TASK-4 ✅ (source labeling and export-path revisions verified). TASK-5 in progress after local acceptance gate PASS.
+TASK-1 ✅; TASK-2 ✅ (R1: immutable snapshot); TASK-3 ✅ (R1: narrow layout); TASK-4 ✅ (source labeling and export-path revisions verified). TASK-5 ✅: project PR #1 and website PR #6 delivered; main/deployment untouched. Final report: FINAL_SUMMARY.md.
 
 Integration check: all metric/source/export contracts match; 37 tests PASS; build/check/notebook/browser PASS. Power BI Desktop/DAX and Windows launcher explicitly Unverified and excluded from portfolio claims. Source trace, audit, metric contract, English results and real screenshots complete.
